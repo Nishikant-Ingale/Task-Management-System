@@ -24,6 +24,7 @@ public class JwtUtil {
 
     private Key getSigningKey(){
         return Keys.hmacShaKeyFor(Base64.getDecoder().decode(secret));
+//        return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
     public String generateToken(String username, List<String> roles) {
@@ -32,7 +33,7 @@ public class JwtUtil {
                 .claim("roles", roles)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(getSigningKey(),SignatureAlgorithm.HS512)
+                .signWith(getSigningKey(),SignatureAlgorithm.HS256)
                 .compact();
     }
 
