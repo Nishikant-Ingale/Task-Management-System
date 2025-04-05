@@ -6,6 +6,7 @@ import com.nishikant.user_service.repository.UserRepository;
 import com.nishikant.user_service.security.JwtUtil;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,8 +20,13 @@ import java.util.Optional;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
+
+    @Autowired
     private final UserRepository userRepository;
+
+    @Autowired
     private final JwtUtil jwtUtil;
+
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/register")
