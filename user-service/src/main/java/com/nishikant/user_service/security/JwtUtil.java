@@ -62,6 +62,8 @@ public class JwtUtil {
 
     @PostConstruct
     public void init() {
-        log.info("JWT secret loaded, length: {}", secret != null ? secret.length() : "null");
+        log.info("Loaded secret (base64): {}", secret);
+        byte[] decoded = Base64.getDecoder().decode(secret);
+        log.info("Decoded length: {}", decoded.length);
     }
 }
