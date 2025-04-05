@@ -62,8 +62,14 @@ public class JwtUtil {
 
     @PostConstruct
     public void init() {
-        log.info("Loaded secret (base64): {}", secret);
-        byte[] decoded = Base64.getDecoder().decode(secret);
-        log.info("Decoded length: {}", decoded.length);
+        log.info("Raw secret from config: '{}'", secret); // Log exactly what's received
+
+        try {
+            byte[] decoded = Base64.getDecoder().decode(secret);
+            log.info("Decoded JWT secret key length: {}", decoded.length);
+        } catch (IllegalArgumentException e) {
+            log.error("Base64 decoding failed: {}", e.getMessage(), e);
+            throw e; // This causes the app to fail — as we want
+        }
     }
 }
