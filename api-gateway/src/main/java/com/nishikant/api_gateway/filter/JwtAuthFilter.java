@@ -27,7 +27,7 @@ public class JwtAuthFilter implements GlobalFilter {
                 .getFirst("Autherization");
 
         if(authHeader == null || !authHeader.startsWith("Bearer ")){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Missing or invalid authentication header")
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Missing or invalid authentication header");
         }
 
         try{
