@@ -4,6 +4,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,9 @@ import java.util.List;
 public class JwtUtil {
     private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
     private final long EXPIRATION_TIME = 1000 * 60 * 60; // 1 Hour
+
+    @Value("${jwt.secret}")
+    private String secret;
 
     public String generateToken(String username, List<String> roles) {
         return Jwts.builder()
