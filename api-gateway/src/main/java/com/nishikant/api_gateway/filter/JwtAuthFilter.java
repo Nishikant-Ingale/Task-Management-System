@@ -1,5 +1,7 @@
 package com.nishikant.api_gateway.filter;
 
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -11,6 +13,8 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 
 @Component
@@ -20,26 +24,32 @@ public class JwtAuthFilter implements GlobalFilter {
     @Value("${jwt.secret}")
     private String secret;
 
-    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain){
+    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
         String authHeader = exchange
                 .getRequest()
                 .getHeaders()
                 .getFirst("Authorization");
 
-        if(authHeader == null || !authHeader.startsWith("Bearer ")){
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Missing or invalid authentication header");
         }
 
-        try{
+        try {
             String token = authHeader.substring(7);  // Removed Bearer
-        }
-        catch(Exception e){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Invalid token: " + e.getMessage());
+            SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+            Jws<Claims> claims = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
+            String username = claims.getBody().getSubject();
+
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token: " + e.getMessage());
         }
 
         return chain
-                .filter(exchange)   ;
+                .filter(exchange);
     }
 
 }
