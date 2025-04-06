@@ -1,4 +1,4 @@
-package com.nishikant.user_service.controller;
+package com.nishikant.user_service.filter;
 
 import com.nishikant.user_service.security.JwtUtil;
 import jakarta.servlet.FilterChain;

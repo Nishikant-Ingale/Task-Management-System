@@ -1,7 +1,7 @@
 package com.nishikant.user_service.security;
 
 
-import com.nishikant.user_service.controller.JwtAuthFilter;
+import com.nishikant.user_service.filter.JwtAuthFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
