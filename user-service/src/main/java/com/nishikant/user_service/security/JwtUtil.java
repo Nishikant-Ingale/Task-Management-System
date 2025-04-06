@@ -60,6 +60,15 @@ public class JwtUtil {
         }
     }
 
+    public List<String> extractRoles(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("roles", List.class);
+    }
+
     @PostConstruct
     public void init() {
         log.info("Raw secret from config: '{}'", secret); // Log exactly what's received
